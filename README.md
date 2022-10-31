@@ -61,7 +61,7 @@ bt2Reader.begin();                                           // initializes the 
 Add these lines to scanCallback:
 ```
 void scanCallback(ble_gap_evt_adv_report_t* report) {
-	if (bt2Reader.scanCallback(report)) {                     // returns true if scanCallback found a BT2 device, so you can skip other checks
+	if (bt2Reader.scanCallback(report)) {                // returns true if scanCallback found a BT2 device, so you can skip other checks
                                                              // and save a few CPU cycles
 		Bluefruit.Scanner.resume();
 		return;
@@ -70,6 +70,33 @@ void scanCallback(ble_gap_evt_adv_report_t* report) {
 	Bluefruit.Scanner.resume();
 }
 ```
+Add these lines to connectCallback:
+```
+void connectCallback(uint16_t connectionHandle) {
+	if (bt2Reader.connectCallback(connectionHandle)) {   // checks if device is a BT2, returns true on successful BT2 connection, false otherwise
+		myConnectionHandle = connectionHandle;       // store the connection handle on a successful connection
+		return;
+	}
+	// any other connection code goes here
 
+}
+```
+Add these lines to disconnectCallback
+```
+void disconnectCallback(uint16_t connectionHandle, uint8_t reason) {
+	if (bt2Reader.disconnectCallback(connectionHandle, reason)) {	// returns true if it's a BT2 device that's being disconnected
+		myConnectionHandle = BLE_CONN_HANDLE_INVALID;
+		return;
+	}
+	// other disconnection callback code here
+}
+```
+At any time in the main loop you can initiate a request for fresh data and reading it using this code:
+```
+bt2Reader.sendReadCommand(myConnectionHandle, startRegister,numberOfRegisters);
+/* wait at least 300ms before expecting a fresh response */
+int rawRegisterValue = bt2Reader.getRegisterValue(myConnectionHandle, registerAddress);
+```
 
+....it's late.... have to finish this week
 
