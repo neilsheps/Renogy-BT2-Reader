@@ -54,7 +54,7 @@ BT2Reader bt2Reader;                                         // creating the cla
 In begin() {} before starting to scan, you need to add these lines:
 ```
 Bluefruit.begin(0, 2);                                       // sets bluefruit to 2 central connections here
-bt2Reader.setDeviceTableSize(2);                             // creates space for 1 connection to a BT2 device (the library can handle more)
+bt2Reader.setDeviceTableSize(1);                             // creates space for 1 connection to a BT2 device (the library can handle more)
 bt2Reader.addTargetBT2Device((char *)"BT-TH-XXXXXXX");       // sets the target BT2 device name to connect to
 bt2Reader.begin();                                           // initializes the class
 ```
