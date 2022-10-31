@@ -9,17 +9,17 @@ This library is strictly use at your own risk.  I am not releasing any code on h
 
 
 
-The BT2 Protocol
+## The BT2 Protocol
 It took a lot of digging to find how to communicate with a BT2
 
 First, a BLE Central device scans for service 0xFFD0 and a manufacturer ID 0x7DE0 and attempts a connection.   There are two services and two characteristics that need to be set up
-
+'''
 tx Service       0000ffD0-0000-1000-8000-00805f9b34fb     // Tx service
 txCharacteristic 0000ffD1-0000-1000-8000-00805f9b34fb    	// Tx characteristic.  This sends data to the BT2
 
 rxService        0000ffF0-0000-1000-8000-00805f9b34fb     // Rx service
 rxCharacteristic 0000ffF1-0000-1000-8000-00805f9b34fb     // Rx characteristic.  This receives data from the BT2 by notifications
-
+'''
 The data format is relatively simple once you read enough data.  First, the Central device (e.g. Adafruit nrf52840) sends a request over the Tx characteristic.   Usually 100-300 ms later you get back a binary file response through a rxCharacteristic notification split into 20 byte packets as necessary.  Thereafter, the Central device sends the BT2 a string that appears to be an acknowledgement of the data received for every 20 byte packet.  It's not clear if this is necessary, as the code seems to work without it, but the Renogy BT app on Android does this, so I kept it.
 
 
