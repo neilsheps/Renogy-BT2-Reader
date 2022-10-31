@@ -11,13 +11,13 @@ It took a lot of digging to find how to communicate with a BT2
 
 First, a BLE Central device scans for service 0xFFD0 and a manufacturer ID 0x7DE0 and attempts a connection.   There are two services and two characteristics that need to be set up
 ```
-tx Service       0000ffd0-0000-1000-8000-00805f9b34fb     // Tx service
+txService        0000ffd0-0000-1000-8000-00805f9b34fb     // Tx service
 txCharacteristic 0000ffd1-0000-1000-8000-00805f9b34fb     // Tx characteristic. Sends data to the BT2
 
 rxService        0000fff0-0000-1000-8000-00805f9b34fb     // Rx service
 rxCharacteristic 0000fff1-0000-1000-8000-00805f9b34fb     // Rx characteristic. Receives notifications from the BT2
 ```
-The data format is relatively simple once you read enough data.  All 2 byte numbers are big endian (MSB, then LSB).  An example data handshake looks like this:
+The data format is relatively simple once you read enough data.  All 2 byte numbers are big endian (MSB, then LSB).  A full list of registers and their functions is available [here](/resources).  An example data handshake looks like this:
 ```
 ff 03 01 00  00 07 10 2a                                     Command sent to BT2 on characteristic FFD1
 []                                                           All commands seem to start with 0xFF
@@ -26,7 +26,7 @@ ff 03 01 00  00 07 10 2a                                     Command sent to BT2
              [___]                                           How many registers to read (7)
                    [___]                                     Modbus 16 checksum, MSB first
 
-ff 03 0e 00 64 00 85 00 00 10 10 00 7a 00 00 00 00 31 68.    Data received through notification on characteristic FFF1
+ff 03 0e 00 64 00 85 00 00 10 10 00 7a 00 00 00 00 31 68     Data received through notification on characteristic FFF1
 []                                                           Replies also start with 0xFF
    []                                                        Acknowledges "read", I believe
       []                                                     Length of data response in bytes (usually 2x registers requested, so 14 here)
@@ -44,6 +44,7 @@ ff 03 0e 00 64 00 85 00 00 10 10 00 7a 00 00 00 00 31 68.    Data received throu
                                                              The BT2 seems to respond OK without this ACK, but I do it also, as that's what the
                                                              Renogy BT app does
 ```
+
 
 
 
