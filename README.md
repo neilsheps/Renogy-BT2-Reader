@@ -12,12 +12,28 @@ It took a lot of digging to find how to communicate with a BT2
 First, a BLE Central device scans for service 0xFFD0 and a manufacturer ID 0x7DE0 and attempts a connection.   There are two services and two characteristics that need to be set up
 ```
 tx Service       0000ffD0-0000-1000-8000-00805f9b34fb     // Tx service
-txCharacteristic 0000ffD1-0000-1000-8000-00805f9b34fb    	// Tx characteristic.  This sends data to the BT2
+txCharacteristic 0000ffD1-0000-1000-8000-00805f9b34fb    // Tx characteristic. Sends data to the BT2
 
 rxService        0000ffF0-0000-1000-8000-00805f9b34fb     // Rx service
-rxCharacteristic 0000ffF1-0000-1000-8000-00805f9b34fb     // Rx characteristic.  This receives data from the BT2 by notifications
+rxCharacteristic 0000ffF1-0000-1000-8000-00805f9b34fb     // Rx characteristic. Receives notifications from the BT2
 ```
-The data format is relatively simple once you read enough data.  First, the Central device (e.g. Adafruit nrf52840) sends a request over the Tx characteristic.   Usually 100-300 ms later you get back a binary file response through a rxCharacteristic notification split into 20 byte packets as necessary.  Thereafter, the Central device sends the BT2 a string that appears to be an acknowledgement of the data received for every 20 byte packet.  It's not clear if this is necessary, as the code seems to work without it, but the Renogy BT app on Android does this, so I kept it.
+The data format is relatively simple once you read enough data.  All 2 byte numbers are bid endian (MSB, then LSB).  An example data handshake looks like this:
+```
+ff 03 01 00  00 07 10 2a          // command sent to BT2 on tx characteristic FFD1
+[]--------------------------------All commands seem to start with 0xFF
+   []-----------------------------0x03 appears to be the command for "read"
+      [___]-----------------------Starting register to read (0x0100)
+             [___]----------------How many registers to read (7)
+                   [___]----------Modbus 16 checksum, MSB first
+
+ff 03 0e 00 64 00 85 00 00 10 10 00 7a 00 00 00 00 31 68
+[]-------------------------------------------------------- Replies also start with 0xFF
+   []----------------------------------------------------- Acknowledges "read", I believe
+      []-------------------------------------------------- Length of data response in bytes (usually 2x registers requested)
+                                                           Here it's 14, which is everything from response[3] to response[16] inclusive
+         [_______________________________________]         14 bytes of data
+         [___]-------------------------------------------- Contents of register 0x0100 (Aux batt SOC, which is 100%)
+
 
 
 
