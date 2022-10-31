@@ -45,7 +45,31 @@ ff 03 0e 00 64 00 85 00 00 10 10 00 7a 00 00 00 00 31 68     Data received throu
                                                              Renogy BT app does
 ```
 
-
+## Using the BT2Reader library
+Setup is fairly straightforward.  You need to set up the Bluefruit.Scanner preparatory calls as usual - see Adafruit's [examples](https://github.com/adafruit/Adafruit_nRF52_Arduino/blob/master/libraries/Bluefruit52Lib/examples/Central/central_scan/central_scan.ino) for help here.  The setup functions are:
+```
+uint16_t myConnectionHandle = BLE_CONN_HANDLE_INVALID;       // a variable to retain connection handle number
+BT2Reader bt2Reader;                                         // creating the class that handles interacting with the BT2
+```
+In begin() {} before starting to scan, you need to add these lines:
+```
+Bluefruit.begin(0, 2);                                       // sets bluefruit to 2 central connections here
+bt2Reader.setDeviceTableSize(2);                             // creates space for 1 connection to a BT2 device (the library can handle more)
+bt2Reader.addTargetBT2Device((char *)"BT-TH-XXXXXXX");       // sets the target BT2 device name to connect to
+bt2Reader.begin();                                           // initializes the class
+```
+Add these lines to scanCallback:
+```
+void scanCallback(ble_gap_evt_adv_report_t* report) {
+	if (bt2Reader.scanCallback(report)) {                     // returns true if scanCallback found a BT2 device, so you can skip other checks
+                                                             // and save a few CPU cycles
+		Bluefruit.Scanner.resume();
+		return;
+	}
+	/* Your code to check for other devices while scanning*/
+	Bluefruit.Scanner.resume();
+}
+```
 
 
 
