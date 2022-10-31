@@ -17,7 +17,7 @@ txCharacteristic 0000ffd1-0000-1000-8000-00805f9b34fb     // Tx characteristic. 
 rxService        0000fff0-0000-1000-8000-00805f9b34fb     // Rx service
 rxCharacteristic 0000fff1-0000-1000-8000-00805f9b34fb     // Rx characteristic. Receives notifications from the BT2
 ```
-The data format is relatively simple once you read enough data.  All 2 byte numbers are bid endian (MSB, then LSB).  An example data handshake looks like this:
+The data format is relatively simple once you read enough data.  All 2 byte numbers are big endian (MSB, then LSB).  An example data handshake looks like this:
 ```
 ff 03 01 00  00 07 10 2a                                     Command sent to BT2 on characteristic FFD1
 []                                                           All commands seem to start with 0xFF
@@ -36,13 +36,15 @@ ff 03 0e 00 64 00 85 00 00 10 10 00 7a 00 00 00 00 31 68.    Data received throu
                                                    [___]     Modbus 16 checksum
 
 
-6d 61 69 6e 20 72 65 63 76 20 64 61 74 61 5b 66 66 5d 20 5b  What appears to be an ack sent to BT2 on characteristic FFD1
+6d 61 69 6e 20 72 65 63 76 20 64 61 74 61 5b 66 66 5d 20 5b  What appears to be a 20 byte ACK sent to BT2 on characteristic FFD1
                                                              it reads "main recv data[ff] [" and the ff corresponds to the first byte
                                                              of every 20 byte notification received; so a 50 byte datagram (3 notifications)
                                                              might trigger an ack sequence like "main recv data[ff] [", "main recv data[77] [",
                                                              and "main recv data[1e] [" depending on data received.  
                                                              The BT2 seems to respond OK without this ACK, but I do it also, as that's what the
                                                              Renogy BT app does
+```
+
 
 
 
