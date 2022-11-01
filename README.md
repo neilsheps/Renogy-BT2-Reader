@@ -26,7 +26,7 @@ ff 03 01 00  00 07 10 2a                                     Command sent to BT2
              [___]                                           How many registers to read (7)
                    [___]                                     Modbus 16 checksum, MSB first on bytes 0 - 5 inclusive
 
-ff 03 0e 00 64 00 85 00 00 10 10 00 7a 00 00 00 00 31 68     Data received through notification on characteristic FFF1
+ff 03 0e 00 64 00 85 00 00 10 10 00 7a 00 00 00 00 31 68     Data response from BT2 through notification on characteristic FFF1
 []                                                           Replies also start with 0xFF
    []                                                        Acknowledges "read", I believe
       []                                                     Length of data response in bytes (usually 2x registers requested, so 14 here)
@@ -36,7 +36,7 @@ ff 03 0e 00 64 00 85 00 00 10 10 00 7a 00 00 00 00 31 68     Data received throu
                                                    [___]     Modbus 16 checksum on bytes 0 - 16 inclusive (in this case)
 
 
-6d 61 69 6e 20 72 65 63 76 20 64 61 74 61 5b 66 66 5d 20 5b  What appears to be a 20 byte ACK sent to BT2 on characteristic FFD1
+6d 61 69 6e 20 72 65 63 76 20 64 61 74 61 5b 66 66 5d 20 5b  20 byte ACK sent to BT2 on characteristic FFD1
  m  a  i  n     r  e  c  v     d  a  t  a  [  f  f  ]     [  it reads "main recv data[ff] [" and the ff corresponds to the first byte
                                                              of every 20 byte notification received; so a 50 byte datagram (3 notifications)
                                                              might trigger an ack sequence like "main recv data[ff] [", "main recv data[77] [",
