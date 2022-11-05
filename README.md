@@ -55,7 +55,9 @@ In begin() {} before starting to scan, you need to add these lines:
 Bluefruit.begin(0, 2);                                       // sets bluefruit to 2 central connections here
 bt2Reader.setDeviceTableSize(1);                             // creates space for 1 connection to a BT2 device (the library can handle more)
 bt2Reader.addTargetBT2Device((char *)"BT-TH-XXXXXXX");       // sets the target BT2 device name to connect to
-bt2Reader.setLoggingLevel(BT2READER_VERBOSE);		     // BT2READER_ERRORS_ONLY and BT2READER_QUIET also supports
+						             // you can also omit this and it will connect to whichever BT2 device it can find
+							     // you can also addTargetBT2Device(uint8_t * macAddress) where macAddress is 6 bytes
+bt2Reader.setLoggingLevel(BT2READER_VERBOSE);		     // BT2READER_ERRORS_ONLY and BT2READER_QUIET also supported
 bt2Reader.begin();                                           // initializes the class
 ```
 Add these lines to scanCallback:
