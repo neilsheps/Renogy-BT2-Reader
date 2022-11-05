@@ -93,9 +93,27 @@ void disconnectCallback(uint16_t connectionHandle, uint8_t reason) {
 ```
 At any time in the main loop you can initiate a request for fresh data and reading it using this code:
 ```
-bt2Reader.sendReadCommand(myConnectionHandle, startRegister,numberOfRegisters);
-/* wait at least 300ms before expecting a fresh response */
-int rawRegisterValue = bt2Reader.getRegisterValue(myConnectionHandle, registerAddress);
+uint32_t sendReadCommandTime = millis();
+bt2Reader.sendReadCommand(myConnectionHandle, startRegister, numberOfRegisters);
+/* usually it takes ~70-120ms to get a response back from the BT2 depending on how many registers are requested */
+while (!bt2Reader.getIsNewDataAvailable(myConnectionHandle) && (millis() - sendReadCommandTime < 5000)) {
+	delay(2);
+}
+
+/* you can obtain the register values (16 bits) by calling getRegister */
+for (int i = 0; i < numberOfRegisters; i++) {
+	Serial.printf("Register 0x%04X contains %d\n", 
+		startRegister + i,
+		bt2Reader.getRegister(myConnectionHandle, startRegister + i)->value
+	);
+}
+
+/* you can also print out each register formatted how it's intended with printRegister.
+   it can handle float, decimal, char arrays and even bit flags */
+for (int i = 0; i < numberOfRegisters; i++) {
+	bt2Reader.printRegister(myConnectionHandle, startRegister + i);
+}
+
 ```
 
 ....it's late.... have to finish this week
