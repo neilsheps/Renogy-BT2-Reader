@@ -1,0 +1,36 @@
+#######################################
+# Syntax Coloring Map For BT2Reader
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+BT2Reader	KEYWORD1
+DEVICE	KEYWORD1
+
+#######################################
+# BT2Reader Methods (KEYWORD2)
+#######################################
+setDeviceTableSize	KEYWORD2
+addTargetBT2Device	KEYWORD2
+begin	KEYWORD2
+scanCallback	KEYWORD2
+connectCallback	KEYWORD2
+disconnectCallback	KEYWORD2
+notifyCallback	KEYWORD2
+notifyCallbackWrapper	KEYWORD2
+sendReadCommand	KEYWORD2
+getDeviceIndex	KEYWORD2
+getDevice	KEYWORD2
+getRegisterValue	KEYWORD2
+getRegisterAsFloat	KEYWORD2
+printRegister	KEYWORD2
+printHex	KEYWORD2
+printUuid	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+MAXIMUM_BT2_DEVICES	LITERAL1
+DEFAULT_DATA_BUFFER_LENGTH	LITERAL1
