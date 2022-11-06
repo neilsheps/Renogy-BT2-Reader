@@ -1,7 +1,7 @@
 # Renogy-BT2-Reader
-Arduino library to interrogate Renogy devices using BT2 dongle over bluetooth
+Arduino library to interrogate Renogy devices that use a BT2 dongle over bluetooth
 
-Renogy make a number of solar MPPT controllers, DC:DC converters and other devices.   Their most recent products use a bluetooth dongle known as a [BT2](https://www.renogy.com/bt-2-bluetooth-module/), but Renogy has never released any documentation on how to interrogate these devices.  By using Wireshark on an Android Phone and Renogy's BT app, I was able to decrypt the protocol used.  I built an Arduino library compatible with Adafruit's nrf52 series devices.  This library has been tested successfully with a [Renogy DCC30S device](https://www.renogy.com/dcc30s-12v-30a-dual-input-dc-dc-on-board-battery-charger-with-mppt/), and may work with other Renogy devices if the registers are known and decribed in the library header file.
+Renogy make a number of solar MPPT controllers, DC:DC converters and other devices.   Their more recent products use a bluetooth dongle known as a [BT2](https://www.renogy.com/bt-2-bluetooth-module/), but Renogy has never released any documentation on how to interrogate these devices.  By using Wireshark on an Android Phone and Renogy's BT app, I was able to decrypt the protocol used.  I built an Arduino library compatible with Adafruit's nrf52 series devices.  This library has been tested successfully with a [Renogy DCC30S device](https://www.renogy.com/dcc30s-12v-30a-dual-input-dc-dc-on-board-battery-charger-with-mppt/), and may work with other Renogy devices if the registers are known and decribed in the library header file.
 
 This library is strictly use at your own risk.  I am not releasing any code on how to write to registers.  Use the Renogy apps (and any validation they provide) for that please.
 
@@ -97,6 +97,7 @@ At any time in the main loop you can initiate a request for fresh data and readi
 ```
 uint32_t sendReadCommandTime = millis();
 bt2Reader.sendReadCommand(myConnectionHandle, startRegister, numberOfRegisters);
+
 /* usually it takes ~70-120ms to get a response back from the BT2 depending on how many registers are requested */
 while (!bt2Reader.getIsNewDataAvailable(myConnectionHandle) && (millis() - sendReadCommandTime < 5000)) {
 	delay(2);
@@ -117,6 +118,3 @@ for (int i = 0; i < numberOfRegisters; i++) {
 }
 
 ```
-
-....it's late.... have to finish this week
-
