@@ -73,13 +73,13 @@ void BT2Reader::begin() {
 		device->rxCharacteristic.begin();
 
 		int registerValueIndex = 0;
-		for (int j = 0; j < registerValueSize; j++) {
+		for (int j = 0; j < registerDescriptionSize; j++) {
 			int registerLength = registerDescription[j].bytesUsed / 2;
 			int registerAddress = registerDescription[j].address;
 			for (int k = 0; k < registerLength; k++) {
-				device->registerValues[registerValueIndex].lastUpdateMillis = 0;
-				device->registerValues[registerValueIndex].value = 0;
-				device->registerValues[registerValueIndex++].registerAddress = registerAddress++;
+				device->registerValues[j+k].lastUpdateMillis = 0;
+				device->registerValues[j+k].value = 0;
+				device->registerValues[j+k++].registerAddress = registerAddress++;
 			}
 		}
 	}
